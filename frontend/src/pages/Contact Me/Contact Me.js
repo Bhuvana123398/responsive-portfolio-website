@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios"; // ✅ import axios
 import "./Contact Me.css";
 
 const Contact = () => {
@@ -18,24 +19,13 @@ const Contact = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://portfolio-website-1-076x.onrender.com/api/send-message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
+      await axios.post("https://responsive-portfolio-website.onrender.com/api/message", formData);
 
-      if (response.ok) {
-        setStatus("Message Sent Successfully!");
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        setStatus(`Error: ${data.error || "Failed to send message"}`);
-      }
+      setStatus("✅ Message Sent Successfully!");
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
-      setStatus("Server Error: Could not send message");
-      console.error("Error:", error);
+      console.error("Error:", error.response?.data || error.message);
+      setStatus("❌ Server Error: Could not send message");
     }
   };
 
